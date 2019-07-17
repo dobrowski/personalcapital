@@ -55,16 +55,25 @@ remote_driver$navigate(url = "https://home.personalcapital.com")
 webElem <- remote_driver$findElement(using = 'name', value = "username")
 webElem$sendKeysToElement(list(key_get("personal capital username")))
 
+Sys.sleep(2)
+
 webElem <- remote_driver$findElement(using = 'tag name', value = 'button')
 webElem$clickElement()
+
+Sys.sleep(2)
+
 
 # Find field to enter password and click button
 webElem <- remote_driver$findElement(using = 'name', value = "passwd")
 webElem$sendKeysToElement(list(key_get("personal capital")))
 
+Sys.sleep(2)
+
+
 webElem <- remote_driver$findElement(using = 'css selector', value = '#form-password > fieldset > div.form-actions > button.btn.btn-primary')
 webElem$clickElement()
 
+Sys.sleep(2)
 
 
 ###  Go to page with data tables I want 
@@ -98,6 +107,7 @@ pageindex <- tibble(num = 0:5, pages = pages, tables = NA )
 
 full <- data.frame()
 
+Sys.sleep(2)
 
 # Actually scrape all the tables 
 
