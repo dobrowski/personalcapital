@@ -25,7 +25,7 @@ url <- "https://home.personalcapital.com/page/login/app#/portfolio/allocation"
 
 ### Start selenium browser session ----
 
-driver <- rsDriver(chromever = "74.0.3729.6")
+driver <- rsDriver(chromever = "76.0.3809.68")  # "74.0.3729.6")
 remote_driver <- driver[["client"]]
 remote_driver$open()
 
@@ -167,5 +167,45 @@ allocations <- read_csv("allocations.csv")
 allocations <- allocations %>% bind_rows(new.allocations) %>% distinct()
 write_csv(allocations, "allocations.csv")
 
+
+
+
+# 
+# p <- ggplot(allocations) + 
+#   geom_line( aes(x = date, y = Allocation, color = cat))
+# 
+# ggplotly(p)
+
+
+
+
+
+#### Compare to target allocations ------
+
+actuals <- new.allocations %>% 
+  transmute(bond =   new.allocations[which(str_detect(Class, "Bond") ), "Allocation" ] %>% sum() ,
+         large.cap =   new.allocations[which(str_detect(Class, "Large Cap") ), "Allocation" ] %>% sum(),
+         mid.cap =   new.allocations[which(str_detect(Class, "Mid Cap") ), "Allocation" ] %>% sum(),
+         small.cap =   new.allocations[which(str_detect(Class, "Small Cap") ), "Allocation" ] %>% sum(),
+         foriegn.dev =   new.allocations[which(str_detect(Class, "Developed") ), "Allocation" ] %>% sum(),
+         foriegn.emerg =   new.allocations[which(str_detect(Class, "Emerging") ), "Allocation" ] %>% sum(),
+         reit =   new.allocations[which(str_detect(Class, "Real") ), "Allocation" ] %>% sum(),
+         cash =   new.allocations[which(str_detect(Class, "Cash") ), "Allocation" ] %>% sum()  ) %>%
+  distinct() %>%
+  gather(key = "investment", value = "percent")
+
+
+target <- tibble( investment = c("bond", "large.cap","mid.cap" ,"small.cap", "foriegn.dev", "foriegn.emerg", "reit", "cash"),
+        target = c(25, 16,9 ,9, 18, 9, 9, 5),
+        range = c(4, 3,  2, 2, 3, 2, 2, 2 )
+        )
+
+target <- target %>%
+  left_join(actuals) %>% 
+  mutate(variance = abs(percent - target) ,
+         out = variance > range)
+
+
+### End ----
 
 
