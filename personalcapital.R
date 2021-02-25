@@ -25,7 +25,7 @@ url <- "https://home.personalcapital.com/page/login/app#/portfolio/allocation"
 
 ### Start selenium browser session ----
 
-driver <- rsDriver(chromever = "76.0.3809.68")  # "74.0.3729.6")
+driver <- rsDriver( chromever =  "89.0.4389.23") #   "85.0.4183.83")  #  "81.0.4044.138") # "79.0.3945.36" ) #  "78.0.3904.70"  )  #  "76.0.3809.68" "74.0.3729.6") run the code binman::list_versions("chromedriver") as specified in the help documentation, then you can identify the versions of compatible with the function.
 remote_driver <- driver[["client"]]
 remote_driver$open()
 
@@ -139,6 +139,7 @@ for( x in 1:6) {
 # }
 
 # saving my cookies for next time 
+ my_cookies <- remote_driver$getAllCookies()
 write_rds(my_cookies, "my_cookies.rds")
 my_cookies2 <- remote_driver$getAllCookies()
 write_rds(my_cookies2, "my_cookies2.rds")
@@ -163,7 +164,8 @@ new.allocations <- pageindex %>%
 
 
 
-allocations <- read_csv("allocations.csv") 
+allocations <- read_csv("allocations.csv", col_types = "dcccdd") 
+#allocations <- allocations %>% mutate(date = mdy(date))
 allocations <- allocations %>% bind_rows(new.allocations) %>% distinct()
 write_csv(allocations, "allocations.csv")
 
@@ -181,6 +183,10 @@ write_csv(allocations, "allocations.csv")
 
 
 #### Compare to target allocations ------
+
+# When needed to update csv manually
+# new.allocations <- allocations %>% filter(date == max(date))
+
 
 actuals <- new.allocations %>% 
   transmute(bond =   new.allocations[which(str_detect(Class, "Bond") ), "Allocation" ] %>% sum() ,
