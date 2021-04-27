@@ -25,7 +25,9 @@ url <- "https://home.personalcapital.com/page/login/app#/portfolio/allocation"
 
 ### Start selenium browser session ----
 
-driver <- rsDriver( chromever =  "89.0.4389.23") #   "85.0.4183.83")  #  "81.0.4044.138") # "79.0.3945.36" ) #  "78.0.3904.70"  )  #  "76.0.3809.68" "74.0.3729.6") run the code binman::list_versions("chromedriver") as specified in the help documentation, then you can identify the versions of compatible with the function.
+
+# run the code binman::list_versions("chromedriver") as specified in the help documentation, then you can identify the versions of compatible with the function.
+driver <- rsDriver( chromever =  "90.0.4430.24") #   "85.0.4183.83")  #  "81.0.4044.138") # "79.0.3945.36" ) #  "78.0.3904.70"  )  #  "76.0.3809.68" "74.0.3729.6") 
 remote_driver <- driver[["client"]]
 remote_driver$open()
 
